@@ -32,6 +32,8 @@ async function fetchPhotos(date){
         // handle the error
         console.error(`Failed to fetch: ${error.message}`);
         const consoleErrorNode = document.createElement('p');
+        consoleErrorNode.classList.add('console_error')
+
         consoleErrorNode.textContent = 'Oops, failed to fetch data';
         containerNode.appendChild(consoleErrorNode);
     }
@@ -68,6 +70,7 @@ buttonNode.addEventListener("click",function(){
     // check the selecteddate is valid or not
     if(new Date(selectedDate) > new Date()){
         const dateErrorNode = document.createElement('p');
+        dateErrorNode.classList.add('date-error')
         dateErrorNode.textContent = "selected date cannot be larger than today.";
         containerNode.appendChild(dateErrorNode);
         return;  
@@ -78,10 +81,10 @@ buttonNode.addEventListener("click",function(){
          // check the array is empty or not
         if(photos.length === 0){
             // add the error message to notice users
-            const errorMessage = `No photos available for ${selectedDate}`;  
-            const errorMessageNode = document.createElement('p')
-            errorMessageNode.textContent = errorMessage;
-            containerNode.appendChild(errorMessageNode);
+            const noPhotoMessageNode = document.createElement('p')
+            noPhotoMessageNode.classList.add('no_photo_message')
+            noPhotoMessageNode.textContent = `No photos available for ${selectedDate}`;  
+            containerNode.appendChild(noPhotoMessageNode);
             return;
         } 
         // display the photos 

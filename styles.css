@@ -55,3 +55,9 @@ button:hover {
     max-width: 600px; /* Restricts the image from stretching too wide */
     height: auto;
 }
+
+.cosole_error, .date-error, .no_photo_message{
+    font-family: "Roboto", serif;
+    font-weight: 100;
+    font-style: italic;
+}
