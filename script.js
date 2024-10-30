@@ -1,4 +1,4 @@
-// config.js 
+// import config.js 
 
 import { config } from './config.js';
 
@@ -7,92 +7,107 @@ const baseUrl = "https://api.nasa.gov/mars-photos/api/v1/rovers/curiosity/photos
 const myApiKey = config.NASA_API_KEY;
 
 const dateNode = document.getElementById("earthDate");
-//let selectedDate = dateNode.value;
+const containerNode = document.getElementById("marsPhotosContainer");
 
-//let url =`${baseUrl}?earth_date=${selectedDate}&api_key=${myApiKey}`
 
-async function fetchPhotos(resourcePath){
+async function fetchPhotos(date){
+    const url =`${baseUrl}?earth_date=${date}&api_key=${myApiKey}`
+
     try {
-        const response = await fetch(resourcePath);
-
+        const response = await fetch(url);
         if(!response.ok){
-            throw new Error(`HTTP Error: ${response.status}`)
+            throw new Error(`HTTP Error: ${response.status}`);
         }
-
         // if response is good, use the JSON method to parse the response body
-        return response.json();
-
-        //const data = await response.json();
-        //console.log(data)
-
+        const marsPhotosData = await response.json();
+        console.log(marsPhotosData);
+        // select the first 3 photos to make destructuring
+        const photos = marsPhotosData.photos.slice(0,3).map((photo) => {
+            const {camera:{full_name},
+            sol, img_src} = photo;
+            return {full_name, sol, img_src};
+        });
+        return photos;  
     } catch(error){
         // handle the error
         console.error(`Failed to fetch: ${error.message}`);
+        const consoleErrorNode = document.createElement('p');
+        consoleErrorNode.textContent = 'Oops, failed to fetch data';
+        containerNode.appendChild(consoleErrorNode);
     }
 }
+      
+   
+//Display Photos on Initial Significant Date 
+async function loadInitialPhotos(){
+    // Clear the container once before loading
+    containerNode.innerHTML = "";
+    // set a designed date
+    const initialDate =  "2020-11-11"; 
+    dateNode.value = initialDate;
+    const headDescription = `Discovery water on Mars (${initialDate})`;
+    //fetch the data
+    const photos = await fetchPhotos(initialDate);
+    // display the photos 
+    displayPhotos(photos,headDescription);
+}
+// call  the loadInitialPhotos function
+window.onload = function() {
+    loadInitialPhotos();
+};
 
 
 
-const buttonNode = document.querySelector("button");
+const buttonNode = document.getElementById("loadButton");
 
 buttonNode.addEventListener("click",function(){
+    // clear the container
+    containerNode.innerHTML = "";
+
     const selectedDate = dateNode.value;
     // check the selecteddate is valid or not
-    if(!selectedDate){
-        alert("please select a date.")
-        return;
+    if(new Date(selectedDate) > new Date()){
+        const dateErrorNode = document.createElement('p');
+        dateErrorNode.textContent = "selected date cannot be larger than today.";
+        containerNode.appendChild(dateErrorNode);
+        return;  
     }
-   
-    //fetch data
-   let url =`${baseUrl}?earth_date=${selectedDate}&api_key=${myApiKey}`;
-   fetchPhotos(url).then(data => console.log(data));
-
-    // display the photos 
-   displayPhotos(url,selectedDate);
+    const headDescription = `Mars Rover Photos on ${selectedDate}`;
+     //fetch the data
+    fetchPhotos(selectedDate).then((photos) => {
+         // check the array is empty or not
+        if(photos.length === 0){
+            // add the error message to notice users
+            const errorMessage = `No photos available for ${selectedDate}`;  
+            const errorMessageNode = document.createElement('p')
+            errorMessageNode.textContent = errorMessage;
+            containerNode.appendChild(errorMessageNode);
+            return;
+        } 
+        // display the photos 
+        displayPhotos(photos,headDescription);
+    });  
 })
 
 
-
-async function displayPhotos(resourcePath,date){
-    const containerNode = document.getElementById("marsPhotosContainer");
-    // clear the old photos
-    containerNode.innerHTML = "";
-    // add a title of the photos
-    const dateTitle = document.createElement('h2');
-    const headerMessage = `Mars Rover Photos on ${date} `;
-    dateTitle.textContent = headerMessage;
-    containerNode.append(dateTitle);
-
-    //fetch the data
-    const marsPhotosData = await fetchPhotos(resourcePath);
-    // check the array is empty or not
-    if(marsPhotosData.photos.length === 0){
-        let errorMessage = `No photo taken on ${date}`;
-        
-        containerNode.innerHTML= errorMessage;
-        return;
-    }
-
-    let photoNumber = 0;
-    marsPhotosData.photos.forEach(photo => { 
-        //destructuring
-        const {camera:{full_name},
-            sol, img_src} = photo;
-        
-        //Select 3 photos to display
-        if(photoNumber <3){
+// Function to display photos
+function displayPhotos(photos,description){
+    // add a description of the photos
+    const headDescriptionNode = document.createElement('h2');
+    headDescriptionNode.textContent = description;
+    containerNode.append(headDescriptionNode); 
+    //display the photos selected and the description 
+    photos.forEach(photo => { 
             const imgNode = document.createElement('img');
-            imgNode.src = img_src;
-            //imgNode.title = `Taken by ${camera.full_name} on sol ${sol}`
-            containerNode.append(imgNode);
+            const text = `Taken by ${photo.full_name} on sol ${photo.sol}`;
+            imgNode.src = photo.img_src;
+            imgNode.alt = text;
+            //append img to the container
+            containerNode.appendChild(imgNode);
             // add the information of the camera
             const textNode = document.createElement('p');
-            textNode.textContent = `Taken by ${full_name} on sol ${sol}`
-            containerNode.append(textNode);
-            photoNumber ++;
-        }
-        
-    });
+            textNode.textContent = text;
+            containerNode.appendChild(textNode);
+        }     
+    );
 }
-
-
