@@ -70,7 +70,7 @@ buttonNode.addEventListener("click",function(){
     // check the selecteddate is valid or not
     if(new Date(selectedDate) > new Date()){
         const dateErrorNode = document.createElement('p');
-        dateErrorNode.classList.add('date-error')
+        dateErrorNode.classList.add('date-error');
         dateErrorNode.textContent = "selected date cannot be larger than today.";
         containerNode.appendChild(dateErrorNode);
         return;  
@@ -81,8 +81,8 @@ buttonNode.addEventListener("click",function(){
          // check the array is empty or not
         if(photos.length === 0){
             // add the error message to notice users
-            const noPhotoMessageNode = document.createElement('p')
-            noPhotoMessageNode.classList.add('no_photo_message')
+            const noPhotoMessageNode = document.createElement('p');
+            noPhotoMessageNode.classList.add('no_photo_message');
             noPhotoMessageNode.textContent = `No photos available for ${selectedDate}`;  
             containerNode.appendChild(noPhotoMessageNode);
             return;
@@ -115,5 +115,5 @@ function displayPhotos(photos,description){
             figureNode.appendChild(figcaptionNode);
             containerNode.appendChild(figureNode);
         }     
-    );
+    )
 }
