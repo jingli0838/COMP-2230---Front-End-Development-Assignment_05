@@ -11,7 +11,7 @@ const containerNode = document.getElementById("marsPhotosContainer");
 
 
 async function fetchPhotos(date){
-    const url =`${baseUrl}?earth_date=${date}&api_key=${myApiKey}`
+    const url =`${baseUrl}?earth_date=${date}&api_key=${myApiKey}`;
 
     try {
         const response = await fetch(url);
@@ -32,7 +32,7 @@ async function fetchPhotos(date){
         // handle the error
         console.error(`Failed to fetch: ${error.message}`);
         const consoleErrorNode = document.createElement('p');
-        consoleErrorNode.classList.add('console_error')
+        consoleErrorNode.classList.add('console_error');
 
         consoleErrorNode.textContent = 'Oops, failed to fetch data';
         containerNode.appendChild(consoleErrorNode);
@@ -45,9 +45,9 @@ async function loadInitialPhotos(){
     // Clear the container once before loading
     containerNode.innerHTML = "";
     // set a designed date
-    const initialDate =  "2020-11-11"; 
+    const initialDate =  "2018-06-19"; 
     dateNode.value = initialDate;
-    const headDescription = `Discovery water on Mars (${initialDate})`;
+    const headDescription = `Discovery Organic Molecules on Mars (${initialDate})`;
     //fetch the data
     const photos = await fetchPhotos(initialDate);
     // display the photos 

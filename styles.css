@@ -4,19 +4,19 @@ body {
     color: #333;
     margin: 0;
     padding: 0;
-    height: 100vh; /* Hey what's vh? Look it up! */
+    height: 100vh; 
 }
 
 h1,h2,p {
     text-align: center; 
 }
 .selectForm {
-    width: 100%;            /* Set a custom width */
-    margin: 0 auto;        /* Center the form */
+    width: 100%;            
+    margin: 0 auto;       
     display: flex;  
-    flex-wrap: wrap;       /* Align elements horizontally */
+    flex-wrap: wrap;       
     align-items: center; 
-    justify-content: center;  /* Center items vertically */
+    justify-content: center;  
     gap: 10px;
 }
 
@@ -58,6 +58,7 @@ button:hover {
 
 .cosole_error, .date-error, .no_photo_message{
     font-family: "Roboto", serif;
-    font-weight: 100;
+    font-weight: bold;
     font-style: italic;
+    margin-top: 100px;
 }
