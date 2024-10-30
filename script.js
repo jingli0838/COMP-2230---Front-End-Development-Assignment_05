@@ -101,16 +101,19 @@ function displayPhotos(photos,description){
     containerNode.append(headDescriptionNode); 
     //display the photos selected and the description 
     photos.forEach(photo => { 
+            const figureNode = document.createElement('figure');
             const imgNode = document.createElement('img');
             const text = `Taken by ${photo.full_name} on sol ${photo.sol}`;
-            imgNode.src = photo.img_src;
-            imgNode.alt = text;
+            imgNode.setAttribute('src', photo.img_src);
+            imgNode.setAttribute('alt',text);
             //append img to the container
-            containerNode.appendChild(imgNode);
+            figureNode.appendChild(imgNode);
+            
+            const figcaptionNode = document.createElement('figcaption');
             // add the information of the camera
-            const textNode = document.createElement('p');
-            textNode.textContent = text;
-            containerNode.appendChild(textNode);
+            figcaptionNode.textContent = text;
+            figureNode.appendChild(figcaptionNode);
+            containerNode.appendChild(figureNode);
         }     
     );
 }
